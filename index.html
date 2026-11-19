@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clasificador de Elementos Documentales - Visión por Computador</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero-header">
+    <span class="hero-badge">VISIÓN POR COMPUTADOR · TENSORFLOW.JS</span>
+    <h1>Clasificador de Documentos (Graficos, Tablas, Textos)</h1>
+    <p class="subtitle">Clasificación visual por lote y evaluación directa de métricas (Precisión, Recall, F1-score, ROC y AUC)</p>
+  </header>
+
+  <section class="card">
+    <div class="controls">
+      <div class="file-box">
+        <strong>Seleccionar una o varias imágenes</strong>
+        <input type="file" id="multi-upload" accept="image/*" multiple />
+      </div>
+
+      <div class="file-box">
+        <strong>O seleccionar carpeta completa (con subcarpetas)</strong>
+        <input type="file" id="folder-upload" accept="image/*" webkitdirectory directory multiple />
+      </div>
+
+      <button type="button" id="btn-evaluate" class="primary-red">Calcular Métricas y Curvas ROC</button>
+      <button type="button" id="btn-clear" class="gray">Limpiar</button>
+    </div>
+    <div id="status">Listo para cargar imágenes. Si subes una carpeta con subcarpetas (Graficos, Tablas, Textos), la clase real se detecta automáticamente.</div>
+  </section>
+
+  <section class="card">
+    <h2>1. Resultados de clasificación por imagen</h2>
+    <div style="overflow-x: auto;">
+      <table id="results-table">
+        <thead>
+          <tr>
+            <th>Vista previa</th>
+            <th>Archivo</th>
+            <th>Clase Real (Etiqueta)</th>
+            <th>Predicción</th>
+            <th>Graficos</th>
+            <th>Tablas</th>
+            <th>Textos</th>
+          </tr>
+        </thead>
+        <tbody id="results-body">
+          <tr>
+            <td colspan="7" style="text-align: center; color: #6b7280;">Aún no se han clasificado imágenes.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="evaluation-section" style="display: none;">
+    <h2>2. Evaluación del Modelo (Precisión, Recall, F1-Score, ROC y AUC)</h2>
+    <div class="summary-pills" id="summary-pills"></div>
+
+    <div class="eval-grid">
+      <div class="eval-box">
+        <h3>Métricas por Clase (One-vs-Rest)</h3>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Clase</th>
+                <th>Precisión</th>
+                <th>Recall</th>
+                <th>F1-Score</th>
+                <th>AUC</th>
+              </tr>
+            </thead>
+            <tbody id="metrics-body"></tbody>
+          </table>
+        </div>
+
+        <h3 style="margin-top: 18px;">Matriz de Confusión</h3>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Real \ Predicho</th>
+                <th>Graficos</th>
+                <th>Tablas</th>
+                <th>Textos</th>
+              </tr>
+            </thead>
+            <tbody id="cm-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="eval-box">
+        <h3>Curvas ROC Multiclase y Área Bajo la Curva (AUC)</h3>
+        <canvas id="roc-canvas" width="460" height="380"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dependencias de TensorFlow.js y Teachable Machine -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+  <!-- Módulos propios separados por responsabilidad -->
+  <script src="metrics.js"></script>
+  <script src="classifier.js"></script>
+</body>
+</html>
